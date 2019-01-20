@@ -1,0 +1,17 @@
+{
+  "name": "pipeline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "elasticsearch": "^15.3.0",
+    "fast-csv": "^2.4.1",
+    "request": "^2.88.0"
+  }
+}
