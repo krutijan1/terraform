@@ -3,8 +3,8 @@
 ## Installation
 
 - Make sure you've installed node on your OS.
-- Make sure elastic search uses kibana
-- Clone the repository and run `npm install` command inside pipeline folder
+- Make sure elastic search uses kibana.
+- Clone the repository and run `npm install` command inside pipeline folder.
 
 ## Setting host for elastic search
 
