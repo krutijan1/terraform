@@ -1,0 +1,5 @@
+# ignore node_modules
+pipeline/node_modules
+
+# ignore terraform state
+.terraform
