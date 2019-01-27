@@ -7,7 +7,8 @@ const path = require('path');
 
 const log = console.log.bind(console);
 const client = new elasticsearch.Client({
-  host: host + ':9200',
+  requestTimeout: 300000,
+  host
 });
 
 const datasetPath = path.join('dataset', 'titanic.csv');
@@ -20,6 +21,7 @@ if (host === false) {
 }
 
 async function createIndex() {
+  log('creating index ...')
   await client.indices.create({ index: myindex });
   log('successfully created ElasticSearch index: %s', myindex);
 }
@@ -41,14 +43,15 @@ function readDataSet() {
 }
 
 function bulkImport(records) {
-    const bulk_request = [];
-    for (let i = 0; i < records.length; i++) {
-      bulk_request.push({ index: { _index: myindex, _type: '_doc', _id: records[i].PassengerId } });
-      bulk_request.push(records[i]);
-    }
-    return client.bulk({
-      body: bulk_request
-    });
+  const bulk_request = [];
+  for (let i = 0; i < records.length; i++) {
+    bulk_request.push({ index: { _index: myindex, _type: '_doc', _id: records[i].PassengerId } });
+    bulk_request.push(records[i]);
+  }
+  log('Bulk inserting records: ', JSON.stringify(bulk_request));
+  return client.bulk({
+    body: bulk_request
+  });
 }
 
 function waitForIndexing() {
@@ -61,7 +64,7 @@ function waitForIndexing() {
 function addToIndex() {
   log('creating index pattern on kibana for %s...', myindex)
   return new Promise(function (resolve, reject) {
-    const kibanaUrl = 'http://' + host + ':9200/.kibana/doc/index-pattern:' + myindex;
+    const kibanaUrl = host + '/.kibana/doc/index-pattern:' + myindex;
     request.post(
       kibanaUrl,
       { json: { 'type': 'index-pattern', 'index-pattern': { 'title': myindex + '*', 'timeFieldName': '' } } },
@@ -81,7 +84,7 @@ function closeConnection() {
 }
 
 function showInfo() {
-  log('go to: http://%s:5601/app/kibana#/discover', host)
+  log('go to: %s/_plugin/kibana/app/kibana#/management/kibana/index?_g=()', host)
 }
 
 async function execute() {
